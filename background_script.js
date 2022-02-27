@@ -19,53 +19,46 @@ function contextMenuAction(info, tab) {
   // tell content_script.js to start loading screen
   browser.tabs.sendMessage(tab.id, { to: "loading", body: text });
 
-  let response;
-  browser.tabs.sendMessage(tab.id, {
-    to: "render-iframe",
-    prob: 0.2,
-    pageUrl: info.pageUrl,
-  });
-  // send text to server for detection
-  // var data = new FormData();
-  // data.append("website_url", info.pageUrl);
-  // data.append("paragraphs", []);
-  // data.append("chosen_paragraph", text);
-  // response = await(
-  //   await fetch("http://localhost:8000/api/article_bias", {
-  //     method: "POST",
-  //     body: data,
-  //   })
-  // ).json();
-
-  // send the response details to content-script.js to render iframe
-  // browser.tabs.sendMessage(tab.id, {
-  //   to: "render-iframe",
-  //   prob: response.coefficient,
-  //   pageUrl: info.pageUrl,
-  // });
-}
-
-// listen from content_script.js and make necessary server request
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  switch (request.to) {
-    case "add":
-      fetch("https://isAI.piyo.cafe/add", {
+  async function run() {
+    let response;
+    const urlObj = new URL(info.pageUrl);
+    const hostname = `https://${urlObj.hostname}`;
+    response = await (
+      await fetch("http://localhost:8000/api/article_bias", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url: request.url, prob: request.prob }),
-      });
-      break;
-    case "get_website_bias":
-      const urlObj = new URL(request.website_url);
-      const hostname = `https://${urlObj.hostname}`;
-      fetch(
-        `http://localhost:8000/api/get_website_bias?website_url=${hostname}`
-      )
-        .then((res) => res.json())
-        .then((res) => sendResponse(res))
-        .catch((err) => sendResponse(err.message));
-      return true;
+        body: JSON.stringify({
+          website_url: hostname,
+          paragraphs: ["a", "b"],
+          chosen_paragraph: text,
+        }),
+      })
+    ).json();
+
+    // send the response details to content-script.js to render iframe
+    browser.tabs.sendMessage(tab.id, {
+      to: "render-iframe",
+      coefficient: "0.9",
+      pageUrl: hostname,
+    });
+
+    run();
+  }
+}
+
+// listen from content_script.js and make necessary server request
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.to == "get_website_bias") {
+    const urlObj = new URL(request.website_url);
+    const hostname = `https://${urlObj.hostname}`;
+
+    fetch(`http://localhost:8000/api/get_website_bias?website_url=${hostname}`)
+      .then((res) => res.json())
+      .then((res) => sendResponse(res))
+      .catch((err) => sendResponse({ coefficient: -1 }));
+
+    return true;
   }
 });

@@ -23,10 +23,10 @@ window.website_average = undefined;
 browser.runtime.sendMessage(
   { to: "get_website_bias", website_url: window.location.origin },
   (res) => {
-    window.website_average = res.avg;
-    // window.isAI_count = res.count;
+    window.website_average = res.coefficient;
 
-    if (res.coefficient >= 0.7 || res.coefficient <= 0.3) {
+    // if (res.coefficient >= 0.7 || res.coefficient <= 0.3) {
+    if (true) {
       isNew = false;
       let frame = document.getElementById("biascope-modal");
 
@@ -59,8 +59,10 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         initFrame(frame);
       }
 
+      console.log(request.pageUrl);
+
       frame.src = browser.runtime.getURL(
-        `./popup/stats.html?prob=${request.prob}&net=${window.website_average}&size=${window.isAI_count}&url=${request.pageUrl}`
+        `./popup/stats.html?prob=${request.coefficient}&net=${window.website_average}&url=${request.pageUrl}`
       );
       browser.runtime.sendMessage({
         to: "add",
