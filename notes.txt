@@ -1,0 +1,15 @@
+To add Page Actions (not supported for Chrome if we already have Browser Action) and extension options, paste the following in manifest.json
+,
+  "page_action": {
+    "default_icon": {
+      "64": "icons/icon.png"
+    },
+    "default_popup": "pageAction/index.html",
+    "default_title": "Biascope"
+  },
+  "options_ui": {
+    "page": "options/index.html"
+  }
+
+
+  In Manifest.json file, under content_script matches key, you can put:  "*://*.mozilla.org/*" 

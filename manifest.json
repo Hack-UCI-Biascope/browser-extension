@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+  "name": "Biascope",
+  "description": "A web extension to detect biases on news articles.",
+  "version": "0.0.1",
+  "icons": {
+    "96": "icons/icon_96.png",
+    "64": "icons/icon_64.png",
+    "48": "icons/icon_48.png"
+  },
+  "permissions": ["contextMenus"],
+  "background": {
+    "scripts": [
+      "background_script.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content_script.js"
+      ]
+    }
+  ],
+  "browser_action": {
+    "default_icon": {
+      "96": "icons/icon_96.png"
+    },
+    "default_popup": "browserAction/index.html",
+    "default_title": "Biascope"
+  }
+}
