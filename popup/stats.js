@@ -1,15 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // const query = window.location.search;
-  // const params = new URLSearchParams(query);
-  // var url = params.get("url");
-  // var prob = Math.round(parseFloat(params.get("prob")) * 100);
-  // var net = Math.round(parseFloat(params.get("net")) * 100);
-  // var size = params.get("size");
-  // var type = params.get("type");
-  // if (prob === 100) prob = 99;
-  // if (prob === 0) prob = 1;
-  // if (net === 100) net = 99;
-  // if (net === 0) net = 1;
+  const query = window.location.search;
+  const params = new URLSearchParams(query);
+  var url = params.get("url");
+  var prob = Math.round(parseFloat(params.get("prob")) * 100);
+  var net = Math.round(parseFloat(params.get("net")) * 100);
+  if (prob === 100) prob = 99;
+  if (prob === 0) prob = 1;
+  if (net === 100) net = 99;
+  if (net === 0) net = 1;
   // if (isNaN(net)) {
   //   document.getElementById("isAI-bar-text").innerHTML =
   //     "No other results found online...";
@@ -21,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
   //   document.getElementById("isAI-bar").style.width = `${net}%`;
   // }
 
-  let prob = 90;
   const progressBar = document.getElementsByClassName("progress-bar")[0];
   //
   if (prob >= 80) {
