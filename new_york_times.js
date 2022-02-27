@@ -96,9 +96,16 @@ for (let p of paragraphs) {
       break;
   }
 }
+console.log(articleParagraphs);
 // make API call to get the bias of the article
 browser.runtime.sendMessage({
   to: "get_article_bias",
   url: window.location.origin,
   paragraphs: articleParagraphs,
+},
+(res) => {
+  const articleBias = res.coefficient;
+  const paragraphBiases = res.paragraphBiases;
+  console.log(paragraphBiases);
 });
+

@@ -47,6 +47,7 @@ function contextMenuAction(info, tab) {
 
 // listen from content_script.js and make necessary server request
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log("request", request);
   switch (request.to) {
     case "add":
       fetch("https://isAI.piyo.cafe/add", {
@@ -61,41 +62,26 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const urlObj = new URL(request.website_url);
       const hostname = `https://${urlObj.hostname}`;
       fetch(
-        `http://localhost:8000/api/get_website_bias?website_url=${hostname}`
+        `http://localhost:8000/api/get_website_bias?website_url=${hostname}`, {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}}
       )
         .then((res) => res.json())
         .then((res) => sendResponse(res))
         .catch((err) => sendResponse(err.message));
       return true;
     case "get_article_bias":
+      console.log("get_article_bias");
       // tell content_script.js to start loading screen
-      browser.tabs.sendMessage(tab.id, { to: "loading", body: "test" });
+      // browser.tabs.sendMessage(tab.id, { to: "loading", body: "test" });
       
-      const urlObj = new URL(request.url);
-      const hostname = `https://${urlObj.hostname}`;
+      const nytUrlObj = new URL(request.url);
+      const nytHostname = `https://${nytUrlObj.hostname}`;
       const data = {
-        "website_url": hostname,
+        "website_url": nytHostname,
         "paragraphs": request.paragraphs,
       };
-      let response = {
-        "coefficient": -1.0,
-        "paragraph_biases": [],
-      }
       fetch("http://localhost:8000/api/article_bias", {body: JSON.stringify(data)})
-        .then((res) => {
-          const r = res.json();
-          response["coefficient"] = r.coefficient;
-          response["paragraph_biases"] = r.paragraph_biases;
-        })
+        .then((res) => res.json())
         .then((res) => sendResponse(res))
         .catch((err) => sendResponse(err.message));
-      
-        browser.tabs.sendMessage(tab.id, {
-          to: "render-iframe",
-          prob: response["coefficient"],
-          pageUrl: request.website_url,
-        });
-
-      return true;
   }
 });
