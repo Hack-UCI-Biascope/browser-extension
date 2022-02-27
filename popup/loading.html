@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <html>
+
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>isAI()</title>
+    <title>Biascope</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Oswald&family=Source+Code+Pro&display=swap" rel="prefetch" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Oswald&family=Source+Code+Pro&display=swap"
+        rel="prefetch" as="style">
 
     <script src="loading.js"></script>
 
     <style>
-        :root {
-        }
-        html, body {
+        :root {}
+
+        html,
+        body {
             margin: 0;
             overflow: hidden;
             font-size: 12px;
@@ -28,10 +32,12 @@
             font-family: 'Noto Sans', sans-serif;
             font-size: 24px;
         }
+
         p {
             margin: 0;
             font-family: 'Noto Sans', sans-serif;
         }
+
         small {
             font-family: 'Noto Sans', sans-serif;
             font-size: 10px;
@@ -40,10 +46,11 @@
         .emoji {
             font-size: 14px;
         }
+
         .code {
             font-family: 'Source Code Pro', monospace;
         }
-        
+
         .root {
             display: flex;
             position: absolute;
@@ -52,6 +59,7 @@
             right: 0;
             bottom: 0;
         }
+
         .center {
             display: flex;
             align-items: center;
@@ -66,18 +74,22 @@
             position: absolute;
             font-size: 24px;
         }
+
         @keyframes horizontal {
             from { left: -12px; }
             to { left: calc(100% - 12px); }
         }
+
         @keyframes vertical {
             from { top: -12px; }
             to { top: calc(100% - 12px); }
         }
+
         @keyframes spinning {
             from { transform: rotate(0deg) }
             to { transform: rotate(360deg) }
         }
+
         .spin {
             animation-name: spinning;
             animation-duration: 3s;
@@ -87,6 +99,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- <div id="moving-container" class="root center" style="background-color: white;">
     </div> -->
