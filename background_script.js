@@ -57,7 +57,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
     case "get_website_bias":
       const urlObj = new URL(request.website_url);
-      const hostname = String(urlObj.hostname);
+      const hostname = `https://${urlObj.hostname}`;
       fetch(
         `http://localhost:8000/api/get_website_bias?website_url=${hostname}`
       )
