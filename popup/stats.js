@@ -4,10 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
   var url = params.get("url");
   var prob = Math.round(parseFloat(params.get("prob")) * 100);
   var net = Math.round(parseFloat(params.get("net")) * 100);
+  var type = params.get("type");
   if (prob === 100) prob = 99;
   if (prob === 0) prob = 1;
   if (net === 100) net = 99;
   if (net === 0) net = 1;
+
+  if (type == "paragraph")
+    document.getElementById("type").innerHTML = "Paragraph";
+  else document.getElementById("type").innerHTML = "Article";
 
   const progressBar = document.getElementsByClassName("progress-bar")[0];
   //

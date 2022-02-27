@@ -62,7 +62,7 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       }
 
       frame.src = browser.runtime.getURL(
-        `./popup/stats.html?prob=${request.coefficient}&net=${window.website_average}&url=${request.pageUrl}`
+        `./popup/stats.html?prob=${request.coefficient}&net=${window.website_average}&url=${request.pageUrl}&type=paragraph`
       );
       browser.runtime.sendMessage({
         to: "add",
