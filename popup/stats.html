@@ -32,7 +32,8 @@
         .progress-bar {
             position: relative;
             width: 480px;
-            height: 3em;
+            height:2em;
+            /* height: 3em; */
             background-color: #ddd;
             border-radius: 1.5rem;
             color: white;
@@ -44,31 +45,30 @@
             display: flex;
             position: absolute;
             left: calc(var(--left, 50) * 1%);
-            top: .5rem;
-            bottom: .5rem;
+            top: .1rem;
+            bottom: .1rem;
             width: calc(var(--width, 0) * 1%);
             min-width: 1rem;
             max-width: calc(100% - 1em);
-            background-color: #069;
+            background-color: var(--inside_color);
             border-radius: 1rem;
-            padding: 1em;
         }
 
         #title {
             font-family: 'Noto Sans', sans-serif;
-            font-size: 24px;
+            font-size: 20px;
             margin-top: 10px 5px;
         }
-        #text {
+        #conclusion {
             font-family: 'Noto Sans', sans-serif;
-            font-size: 20px;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
     <div id="container">
         <p id="title">Biascope Result</p>
-        <div class="progress-bar" data-label="" style="--width:0; --left: 40;"></div>
-        <p id="text">Left</p>
+        <div id="progress-bar" class="progress-bar" data-label="" style="--width:0; --left: 47; --inside_color: #f62d2c" ></div>
+        <p id="conclusion">Left</p>
     </div>
 </body>

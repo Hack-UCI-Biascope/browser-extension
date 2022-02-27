@@ -27,7 +27,9 @@ function contextMenuAction(info, tab) {
   });
   // send text to server for detection
   // var data = new FormData();
-  // data.append("website_url": "paragraphs": [], "chosen_paragraph", text);
+  // data.append("website_url", info.pageUrl);
+  // data.append("paragraphs", []);
+  // data.append("chosen_paragraph", text);
   // response = await(
   //   await fetch("http://localhost:8000/api/article_bias", {
   //     method: "POST",
@@ -47,13 +49,13 @@ function contextMenuAction(info, tab) {
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.to) {
     case "add":
-      // fetch("https://isAI.piyo.cafe/add", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ url: request.url, prob: request.prob }),
-      // });
+      fetch("https://isAI.piyo.cafe/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: request.url, prob: request.prob }),
+      });
       break;
     case "get_website_bias":
       const urlObj = new URL(request.website_url);
@@ -64,7 +66,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         .then((res) => res.json())
         .then((res) => sendResponse(res))
         .catch((err) => sendResponse(err.message));
-      // .then((res) => sendResponse(res));
       return true;
   }
 });

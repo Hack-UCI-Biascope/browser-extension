@@ -21,36 +21,37 @@ document.addEventListener("DOMContentLoaded", () => {
   //   document.getElementById("isAI-bar").style.width = `${net}%`;
   // }
 
-  // //
-  // if (prob >= 80) {
-  //   document.getElementById("isAI-conclusion").innerHTML = "Right";
-  // } else if (prob >= 60) {
-  //   document.getElementById("isAI-conclusion").innerHTML = "Lean Right";
-  // } else if (prob >= 40) {
-  //   document.getElementById("isAI-conclusion").innerHTML = "Center";
-  // } else if (prob >= 20) {
-  //   document.getElementById("isAI-conclusion").innerHTML = "Lean Left";
-  // } else {
-  //   document.getElementById("isAI-conclusion").innerHTML = "Left";
-  // }
-
+  let prob = 90;
   const progressBar = document.getElementsByClassName("progress-bar")[0];
+  //
+  if (prob >= 80) {
+    document.getElementById("conclusion").innerHTML = "Right";
+    progressBar.style.setProperty("--inside_color", "#f62d2c");
+  } else if (prob >= 60) {
+    document.getElementById("conclusion").innerHTML = "Lean Right";
+    progressBar.style.setProperty("--inside_color", "#a2274b");
+  } else if (prob >= 40) {
+    document.getElementById("conclusion").innerHTML = "Center";
+    progressBar.style.setProperty("--inside_color", "#722a6a");
+  } else if (prob >= 20) {
+    document.getElementById("conclusion").innerHTML = "Lean Left";
+    progressBar.style.setProperty("--inside_color", "#413088");
+  } else {
+    document.getElementById("conclusion").innerHTML = "Left";
+    progressBar.style.setProperty("--inside_color", "#0f34a6");
+  }
+
+  let buffer = 3;
+  let width = Math.abs(prob - 50);
+  if (prob < 50) {
+    //left
+    left = 50 - width + buffer;
+  } else if (prob > 50) {
+    // right
+    left = 50 - buffer;
+  }
+
   const computedStyle = getComputedStyle(progressBar);
-  progressBar.style.setProperty("--width", 0);
-  progressBar.style.setProperty("--left", 47);
-
-  // let buffer = 3
-
-  // let width = abs(prob - 0.5) * 100
-  // if prob < 0.5 (left)
-  // left = 50 - width + buffer
-  // if prob > 0.5 (right)
-  // left = 50 - buffer
-
-  // color
-  // left: #0f34a6
-  // lean left: #413088
-  // center: #722a6a
-  // lean right: #a2274b
-  // right: #f62d2c
+  progressBar.style.setProperty("--width", width);
+  progressBar.style.setProperty("--left", left);
 });
