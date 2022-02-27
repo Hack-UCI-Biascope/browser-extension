@@ -20,13 +20,82 @@ function initFrame(frame) {
 
 window.website_average = undefined;
 
+// scrape the page for paragraphs and highlight them
+const paragraphs = document.querySelector("section[role='feed']").querySelectorAll("p");
+let articleParagraphs = [];
+for (let p of paragraphs) {
+  if (p.textContent.trim().length > 0) {
+    articleParagraphs.push(p.textContent.trim());
+  } else {
+      break;
+  }
+}
+console.log(articleParagraphs);
+// make API call to get the bias of the article
+browser.runtime.sendMessage({
+  to: "get_article_bias",
+  url: window.location.origin,
+  paragraphs: articleParagraphs,
+},
+(res) => {
+  const articleBias = res.coefficient;
+  // display article bias
+  // if (articleBias >= 0.7 || articleBias <= 0.3) {
+    if (true) {
+      isNew = false;
+      let frame = document.getElementById("biascope-modal");
+
+      if (!frame) {
+        isNew = true;
+        frame = document.createElement("iframe");
+        initFrame(frame);
+      }
+
+      frame.src = browser.runtime.getURL(
+        `/stats.html?prob=${articleBias}&net=${articleBias}&size=${window.isAI_count}&url=${window.location.origin}&type=Peers`
+      );
+
+      if (isNew) document.body.prepend(frame);
+    }
+  const paragraphBiases = res.paragraphBiases;
+  console.log(paragraphBiases);
+  // highlight paragraphs
+  for (let index = 0; index < paragraphs.length; index++) {
+    const paragraph = paragraphs[index];
+    const paragraphBias = paragraphBiases[index];
+    let color = "";
+    switch (paragraphBias) {
+      case paragraphBias < 0.2:
+        color = "#0f34a6";
+        break;
+      case paragraphBias < 0.4:
+        color = "#413088";
+        break;
+      case paragraphBias < 0.6:
+        color = "#722a6a";
+        break;
+      case paragraphBias < 0.8:
+        color = "#a2274b";
+        break;
+      case paragraphBias <= 1:
+        color = "#f62d2c";
+        break;
+      default:
+        break;
+    }
+    paragraph.style.backgroundColor = color;
+  }
+
+});
+
+
 browser.runtime.sendMessage(
   { to: "get_website_bias", website_url: window.location.origin },
   (res) => {
-    window.website_average = res.avg;
-    // window.isAI_count = res.count;
+    window.website_average = res.coefficient;
 
-    if (res.coefficient >= 0.7 || res.coefficient <= 0.3) {
+    // if (res.coefficient >= 0.7 || res.coefficient <= 0.3) {
+    if (true) {
       isNew = false;
       let frame = document.getElementById("biascope-modal");
 
@@ -59,8 +128,10 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         initFrame(frame);
       }
 
+      console.log(request.pageUrl);
+
       frame.src = browser.runtime.getURL(
-        `./popup/stats.html?prob=${request.prob}&net=${window.website_average}&size=${window.isAI_count}&url=${request.pageUrl}`
+        `./popup/stats.html?prob=${request.coefficient}&net=${window.website_average}&url=${request.pageUrl}`
       );
       browser.runtime.sendMessage({
         to: "add",
@@ -83,29 +154,10 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
       if (isNew) document.body.prepend(frame);
       break;
+    case "highlight":
+      // highlight paragraphs
   }
 });
 
-// scrape the page for paragraphs and highlight them
-const paragraphs = document.querySelector("section[role='feed']").querySelectorAll("p");
-let articleParagraphs = [];
-for (let p of paragraphs) {
-  if (p.textContent.trim().length > 0) {
-    articleParagraphs.push(p);
-  } else {
-      break;
-  }
-}
-console.log(articleParagraphs);
-// make API call to get the bias of the article
-browser.runtime.sendMessage({
-  to: "get_article_bias",
-  url: window.location.origin,
-  paragraphs: articleParagraphs,
-},
-(res) => {
-  const articleBias = res.coefficient;
-  const paragraphBiases = res.paragraphBiases;
-  console.log(paragraphBiases);
-});
+
 

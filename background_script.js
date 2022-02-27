@@ -80,9 +80,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         "website_url": nytHostname,
         "paragraphs": request.paragraphs,
       };
-      fetch("http://localhost:8000/api/article_bias", {body: JSON.stringify(data)})
+      fetch("http://localhost:8000/api/article_bias", {method: "POST", headers: myHeaders, body: JSON.stringify(data)})
         .then((res) => res.json())
-        .then((res) => sendResponse(res))
+        .then((res) => browser.tabs.sendMessage(tab.id, {
+          to: "highlight",
+          coefficient: res.coefficient,
+          paragraphs: res.paragraphs,
+        })
+        )
         .catch((err) => sendResponse(err.message));
   }
 });
