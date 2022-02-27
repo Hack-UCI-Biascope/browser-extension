@@ -67,5 +67,35 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         .then((res) => sendResponse(res))
         .catch((err) => sendResponse(err.message));
       return true;
+    case "get_article_bias":
+      // tell content_script.js to start loading screen
+      browser.tabs.sendMessage(tab.id, { to: "loading", body: "test" });
+      
+      const urlObj = new URL(request.url);
+      const hostname = `https://${urlObj.hostname}`;
+      const data = {
+        "website_url": hostname,
+        "paragraphs": request.paragraphs,
+      };
+      let response = {
+        "coefficient": -1.0,
+        "paragraph_biases": [],
+      }
+      fetch("http://localhost:8000/api/article_bias", {body: JSON.stringify(data)})
+        .then((res) => {
+          const r = res.json();
+          response["coefficient"] = r.coefficient;
+          response["paragraph_biases"] = r.paragraph_biases;
+        })
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse(err.message));
+      
+        browser.tabs.sendMessage(tab.id, {
+          to: "render-iframe",
+          prob: response["coefficient"],
+          pageUrl: request.website_url,
+        });
+
+      return true;
   }
 });
