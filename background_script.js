@@ -69,5 +69,20 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       .catch((err) => sendResponse({ coefficient: -1 }));
 
     return true;
+  } else if (request.to == "get_article_bias") {
+      console.log("get_article_bias");
+      // tell content_script.js to start loading screen
+      // browser.tabs.sendMessage(tab.id, { to: "loading", body: "test" });
+      
+      const nytUrlObj = new URL(request.url);
+      const nytHostname = `https://${nytUrlObj.hostname}`;
+      const data = {
+        "website_url": nytHostname,
+        "paragraphs": request.paragraphs,
+      };
+      fetch("http://localhost:8000/api/article_bias", {body: JSON.stringify(data)})
+        .then((res) => res.json())
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse(err.message));
   }
 });
