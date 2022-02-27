@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biascope</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Oswald&family=Source+Code+Pro&display=swap" rel="prefetch" as="style">
+
+    <script src="stats.js"></script>
+
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            background-color: white;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .progress-bar {
+            position: relative;
+            width: 480px;
+            height: 3em;
+            background-color: #ddd;
+            border-radius: 1.5rem;
+            color: white;
+            margin: 0 5px 0 5px;
+        }
+
+        .progress-bar::before {
+            content: attr(data-label);
+            display: flex;
+            position: absolute;
+            left: calc(var(--left, 50) * 1%);
+            top: .5rem;
+            bottom: .5rem;
+            width: calc(var(--width, 0) * 1%);
+            min-width: 1rem;
+            max-width: calc(100% - 1em);
+            background-color: #069;
+            border-radius: 1rem;
+            padding: 1em;
+        }
+
+        #title {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 24px;
+            margin-top: 10px 5px;
+        }
+        #text {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <p id="title">Biascope Result</p>
+        <div class="progress-bar" data-label="" style="--width:0; --left: 40;"></div>
+        <p id="text">Left</p>
+    </div>
+</body>
