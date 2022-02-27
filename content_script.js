@@ -25,8 +25,10 @@ browser.runtime.sendMessage(
   (res) => {
     window.website_average = res.coefficient;
 
-    // if (res.coefficient >= 0.7 || res.coefficient <= 0.3) {
-    if (true) {
+    if (
+      res.coefficient != -1 &&
+      (res.coefficient >= 0.7 || res.coefficient <= 0.3)
+    ) {
       isNew = false;
       let frame = document.getElementById("biascope-modal");
 
@@ -37,7 +39,7 @@ browser.runtime.sendMessage(
       }
 
       frame.src = browser.runtime.getURL(
-        `/stats.html?prob=${window.website_average}&net=${window.website_average}&size=${window.isAI_count}&url=${window.location.origin}&type=Peers`
+        `/stats.html?prob=${window.website_average}&net=${window.website_average}&url=${window.location.origin}`
       );
 
       if (isNew) document.body.prepend(frame);
@@ -58,8 +60,6 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         frame = document.createElement("iframe");
         initFrame(frame);
       }
-
-      console.log(request.pageUrl);
 
       frame.src = browser.runtime.getURL(
         `./popup/stats.html?prob=${request.coefficient}&net=${window.website_average}&url=${request.pageUrl}`

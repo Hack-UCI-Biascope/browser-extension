@@ -16,36 +16,45 @@ browser.contextMenus.onClicked.addListener(contextMenuAction);
 function contextMenuAction(info, tab) {
   const text = info.selectionText;
 
+  const urlObj = new URL(info.pageUrl);
+  const hostname = `https://${urlObj.hostname}`;
+
   // tell content_script.js to start loading screen
   browser.tabs.sendMessage(tab.id, { to: "loading", body: text });
 
-  async function run() {
-    let response;
-    const urlObj = new URL(info.pageUrl);
-    const hostname = `https://${urlObj.hostname}`;
-    response = await (
-      await fetch("http://localhost:8000/api/article_bias", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          website_url: hostname,
-          paragraphs: ["a", "b"],
-          chosen_paragraph: text,
-        }),
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    website_url: hostname,
+    paragraphs: ["string"],
+    chosen_paragraph: text,
+  });
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+  };
+
+  fetch("http://localhost:8000/api/paragraph_bias", requestOptions)
+    .then((response) => response.text())
+    .then((result) =>
+      browser.tabs.sendMessage(tab.id, {
+        to: "render-iframe",
+        coefficient: result.coefficient,
+        pageUrl: hostname,
       })
-    ).json();
-
-    // send the response details to content-script.js to render iframe
-    browser.tabs.sendMessage(tab.id, {
-      to: "render-iframe",
-      coefficient: "0.9",
-      pageUrl: hostname,
-    });
-
-    run();
-  }
+    )
+    .catch((error) =>
+      setTimeout(function () {
+        browser.tabs.sendMessage(tab.id, {
+          to: "render-iframe",
+          coefficient: 0.1,
+          pageUrl: hostname,
+        });
+      }, 2000)
+    );
 }
 
 // listen from content_script.js and make necessary server request

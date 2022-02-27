@@ -8,16 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (prob === 0) prob = 1;
   if (net === 100) net = 99;
   if (net === 0) net = 1;
-  // if (isNaN(net)) {
-  //   document.getElementById("isAI-bar-text").innerHTML =
-  //     "No other results found online...";
-  //   document.getElementById("isAI-bar").style.width = "0%";
-  // } else {
-  //   document.getElementById(
-  //     "isAI-bar-text"
-  //   ).innerHTML = `${net}% according to ${size} other results`;
-  //   document.getElementById("isAI-bar").style.width = `${net}%`;
-  // }
 
   const progressBar = document.getElementsByClassName("progress-bar")[0];
   //
